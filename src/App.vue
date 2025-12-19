@@ -39,6 +39,7 @@ button {
     padding: 10px;
     width: 160px;
     height: 80px;
+    margin-bottom: 10px;
     margin-right: 10px;
     background-color: #10eab2;
     color: white;
