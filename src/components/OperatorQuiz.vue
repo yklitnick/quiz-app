@@ -40,23 +40,26 @@ export default {
                 '-': (a, b) => a - b,
                 '/': (a, b) => a / b,
                 '*': (a, b) => a * b,
-            }
+            };
 
             const methodToUse = methods[this.operator];
+            this.expectedAnswer = methodToUse(this.operandLeft, this.operandRight);
+            this.answers = [this.expectedAnswer];
 
-            this.answers = [];
-            this.answers.push(methodToUse(this.operandLeft, this.operandRight + 1));
-            this.answers.push(methodToUse(this.operandLeft + 1, this.operandRight));
-            this.answers.push(methodToUse(this.operandLeft + 1, this.operandRight + 1));
-            this.answers.push(methodToUse(this.operandLeft - 1, this.operandRight + 1));
-            this.answers.push(methodToUse(this.operandLeft - 1, this.operandRight - 1));
-            //for (let i = 0; i < 5; i++) {
-            //    const answer = methodToUse(parseInt(Math.random() * 3), parseInt(Math.random() * 3));
-            //    this.answers.push(answer);
-            //}
-            const expectedAnswer = methodToUse(this.operandLeft, this.operandRight);
-            this.answers[parseInt(Math.random() * this.answers.length)] = expectedAnswer;
-            this.expectedAnswer = expectedAnswer;
+            // Add 4 more unique random answers
+            while (this.answers.length < 5) {
+                const randomAnswer = methodToUse(
+                    parseInt(Math.random() * 13),
+                    parseInt(Math.random() * 13)
+                );
+
+                if (!this.answers.includes(randomAnswer)) {
+                    this.answers.push(randomAnswer);
+                }
+            }
+
+            // Shuffle the array so the correct answer isn't always first
+            this.answers.sort(() => Math.random() - 0.5);
         }
     }
 }
