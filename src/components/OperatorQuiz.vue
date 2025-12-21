@@ -5,6 +5,7 @@
             <button @click="selectAnswer(answer)" v-for="(answer, index) of answers" :key="index">{{ answer }}</button>
         </div>
         <div v-if="!isQuizStarted">
+            <h4>Operator: {{ operator }}</h4>
             <button @click="startQuiz">Start</button>
         </div>
         <button @click="$emit('onBack')">Back</button>
@@ -26,7 +27,7 @@ export default {
     methods: {
         selectAnswer(answerSelected) {
             if (answerSelected !== this.expectedAnswer) {
-                alert('WRONG ANSWER!!');
+                alert(`WRONG ANSWER!! The correct answer is: ${this.expectedAnswer}.`);
             }
             this.startQuiz();
         },
@@ -38,11 +39,15 @@ export default {
             const methods = {
                 '+': (a, b) => a + b,
                 '-': (a, b) => a - b,
-                '/': (a, b) => a / b,
+                '/': (a, b) => Math.round((a / b) * 10) / 10, // Rounds to 1 decimal place
                 '*': (a, b) => a * b,
             };
 
             const methodToUse = methods[this.operator];
+            // Ensure we don't divide by zero if operator is '/'
+            if (this.operator === '/' && this.operandRight === 0) {
+                this.operandRight = 1;
+            }
             this.expectedAnswer = methodToUse(this.operandLeft, this.operandRight);
             this.answers = [this.expectedAnswer];
 
@@ -53,7 +58,7 @@ export default {
                     parseInt(Math.random() * 13)
                 );
 
-                if (!this.answers.includes(randomAnswer)) {
+                if (!this.answers.includes(randomAnswer) && randomAnswer !== NaN && isFinite(randomAnswer)) {
                     this.answers.push(randomAnswer);
                 }
             }
